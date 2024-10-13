@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Weather App</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Weather App</h1>
+            <div class="form-container">
+                <form method="POST">
+                    <input type="text" name="city" placeholder="Enter city name" required>
+                    <button type="submit">Get Weather</button>
+                </form>
+            </div>
+
+            {% if weather %}
+            <div class="weather_info"> <!-- Updated class for styling -->
+                <h2>{{ weather.city }}</h2>
+                <p>{{ weather.temperature }}&deg;</p>
+                <p>{{ weather.description }}</p>
+                <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Weather Icon">
+            </div>
+            {% elif weather is none and request.method == 'POST' %}
+            <p>City not found</p>
+            {% endif %}
+        </div>
+
+        <script>
+            const container = document.querySelector(".container");
+            const weatherDescription = document.querySelector(".weather_info p:nth-child(3)");
+            if (weatherDescription) {
+                const weather = weatherDescription.textContent.toLowerCase();
+                if (weather.includes("rain")) {
+                    container.style.backgroundImage = "url('/static/rain.jpg')";
+                } else if (weather.includes("sunny")) {
+                    container.style.backgroundImage = "url('/static/sunny.jpg')";
+                } else if (weather.includes("cloudy")) {
+                    container.style.backgroundImage = "url('/static/cloudy.jpg')";
+                }
+            }
+        </script>
+    </body>
+</html>
